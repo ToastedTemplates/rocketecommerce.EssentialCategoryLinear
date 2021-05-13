@@ -1,0 +1,67 @@
+﻿@inherits RocketEcommerce.Components.RocketEcommerceTokens<Simplisity.SimplisityRazor>
+@using Simplisity;
+@using RocketEcommerce.Components;
+@using DNNrocketAPI.Components;
+
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocket/api/App_LocalResources/")
+@AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketECommerce/App_LocalResources/")
+
+@{
+    PortalShopLimpet portalShop = null;
+
+    var productDataList = (ProductLimpetList)Model.GetDataObject("productlist");
+    if (productDataList != null)
+    {
+        portalShop = productDataList.PortalShop;
+    }
+
+    var productData = (ProductLimpet)Model.GetDataObject("productdata");
+    if (productData != null)
+    {
+        portalShop = productData.PortalShop;
+    }
+
+    var appThemeFolder = portalShop.AppTheme.AppThemeFolder;
+    var companyData = new CompanyLimpet(portalShop.PortalId, DNNrocketUtils.GetCurrentCulture());
+    var remoteParam = (RemoteLimpet)Model.GetDataObject("remoteparam");
+    var cartdata = (CartLimpet)Model.GetDataObject("cartdata");
+    var sessionParams = (SessionParams)Model.GetDataObject("sessionparams");
+
+
+    // We need the moduleid, the first remote call will have the moduleid, subsequent call need to have the remote module passed by the s-field
+    var moduleId = Model.ModuleId;
+    var tabId = Model.TabId;
+    if (remoteParam != null)
+    {
+        moduleId = remoteParam.ModuleId;
+        tabId = remoteParam.TabId;
+    }
+
+    var categoryData = new CategoryLimpet(portalShop.PortalId, sessionParams.GetInt("searchcategoryid"), remoteParam.CultureCode);
+
+}
+
+@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/rocketecommerce/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/resx/")
+
+<!-- !PAGE CONTENT! -->
+<div id="ecommerce-tag" class="ecommerce-container">
+
+    @{
+        if (productData != null)
+        {
+            @RenderTemplate("ProductDetail.cshtml", "/DesktopModules/RocketThemes/rocketecommerce", portalShop.AppTheme.AppThemeFolder, Model, portalShop.AppTheme.AppVersionFolder, true)
+        }
+        else
+        {
+            @RenderTemplate("ProductList.cshtml", "/DesktopModules/RocketThemes/rocketecommerce", portalShop.AppTheme.AppThemeFolder, Model, portalShop.AppTheme.AppVersionFolder, true)
+        }
+    }
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        simplisity_setSessionField('remotecall', 'True');
+        simplisity_setSessionField('remotelanguage', '@remoteParam.CultureCode');
+    });
+</script>

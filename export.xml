@@ -1,0 +1,44 @@
+<item>
+	<itemid>-1</itemid>
+	<portalid>0</portalid>
+	<moduleid>-1</moduleid>
+	<xrefitemid>0</xrefitemid>
+	<parentitemid>0</parentitemid>
+	<typecode>APPTHEME</typecode>
+	<guidkey>appTheme*rocketecommerce*EssentialCategory*1.0</guidkey>
+	<lang></lang>
+	<userid>0</userid>
+	<sortorder>0</sortorder>
+	<genxml>
+		<hidden>
+			<appthemefolder><![CDATA[EssentialCategoryLinear]]></appthemefolder>
+			<appversionfolder>1.0</appversionfolder>
+			<reload>false</reload>
+			<urlparamsystemkey />
+			<activevalue />
+			<browsersessionid>b7522c08-fce3-45a1-b9d9-57f005344a24-1600400210133</browsersessionid>
+			<browserid>453cc900-0f71-47b2-917b-a091da830ec0-1596970927291</browserid>
+			<nextlang />
+			<editlang>en-US</editlang>
+			<systemkey>dnnrocketapptheme</systemkey>
+			<latestrev>3</latestrev>
+			<appthemeprefix />
+			<appthemename><![CDATA[EssentialCategoryLinear]]></appthemename>
+		</hidden>
+		<select>
+			<versionfolder><![CDATA[1.0]]></versionfolder>
+		</select>
+		<textbox>
+			<defaulttemplate><![CDATA[view.cshtml]]></defaulttemplate>
+			<defaultcmd><![CDATA[rocketecommerce_productlist]]></defaultcmd>
+			<summary><![CDATA[]]></summary>
+		</textbox>
+		<checkbox>
+			<enablesettings><![CDATA[true]]></enablesettings>
+		</checkbox>
+		<radio>
+			<themetype><![CDATA[2]]></themetype>
+		</radio>
+	</genxml>
+	<data><![CDATA[]]></data>
+</item>
