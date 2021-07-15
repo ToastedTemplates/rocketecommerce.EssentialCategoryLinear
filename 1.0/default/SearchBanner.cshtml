@@ -8,21 +8,11 @@
 
 
 @{
-    var sessionParams = (SessionParams)Model.GetDataObject("sessionparams");
-    var remoteParam = (RemoteLimpet)Model.GetDataObject("remoteparam");
+    var sessionParams = (SessionParams)Model.SessionParamsData;
     var portalShop = (PortalShopLimpet)Model.GetDataObject("portalshop");
     var productDataList = (ProductLimpetList)Model.GetDataObject("productlist");
 
-    // We need the moduleid, the first remote call will have the moduleid, subsequent call need to have the remote module passed by the s-field
-    var moduleId = Model.ModuleId;
-    var tabId = Model.TabId;
-    if (remoteParam != null)
-    {
-        moduleId = remoteParam.ModuleId;
-        tabId = remoteParam.TabId;
-    }
-
-    var categoryData = new CategoryLimpet(portalShop.PortalId, sessionParams.GetInt("searchcategoryid"), remoteParam.CultureCode);
+    var categoryData = new CategoryLimpet(portalShop.PortalId, sessionParams.GetInt("searchcategoryid"), sessionParams.CultureCode);
 }
 
 <div class="w3-bar searchdata w3-white w3-margin-top">
@@ -31,8 +21,8 @@
     <div class="w3-bar-item w3-left w3-hide-small">
         <div class="w3-bar">
             @TextBox(new SimplisityInfo(), "genxml/textbox/searchtext", "class='w3-bar-item w3-input w3-border simplisity_sessionfield actionentrykey' autocomplete='off' style='width:225px;padding-right: 50px;' ")
-            <span class="w3-bar-item w3-button w3-border w3-deep-orange clearsearch " onclick="$('#searchcategoryid').val('0');$('#searchtext').val(''); $('.triggersearch').trigger('click');" style="margin-left: -50px;display:none;" s-fields=''>@ButtonIcon(ButtonTypes.cancelsearch)</span>
-            <span class="w3-bar-item w3-button w3-border w3-light-grey simplisity_click dosearch" onclick="$('#searchcategoryid').val('0'); $('.triggersearch').trigger('click');" style="margin-left: -50px;">@ButtonIcon(ButtonTypes.search)</span>
+            <span class="w3-bar-item w3-button w3-border w3-border-red w3-deep-orange clearsearch " onclick="$('#searchcategoryid').val('0');$('#searchtext').val(''); $('.triggersearch').trigger('click');" style="margin-left: -50px;display:none;" s-fields=''>@ButtonIcon(ButtonTypes.cancelsearch)</span>
+            <span class="w3-bar-item w3-button w3-border w3-light-grey simplisity_click dosearch" onclick="altersearchurl();$('#searchcategoryid').val('0'); $('.triggersearch').trigger('click');" style="margin-left: -50px;">@ButtonIcon(ButtonTypes.search)</span>
         </div>
     </div>
 
@@ -41,10 +31,10 @@
         var orderbyDictionary = new Dictionary<string, string>();
         foreach (var orderbyInfo in portalShop.GetProductOrderByList())
         {
-            orderbyDictionary.Add(orderbyInfo.GetXmlProperty("genxml/key"), ResourceKey("RE." + orderbyInfo.GetXmlProperty("genxml/key"), remoteParam.CultureCode).ToString());
+            orderbyDictionary.Add(orderbyInfo.GetXmlProperty("genxml/key"), ResourceKey("RE." + orderbyInfo.GetXmlProperty("genxml/key"), sessionParams.CultureCode).ToString());
         }
         <div class="w3-bar-item w3-right w3-hide-small w3-margin-left" style="width: 100px">
-            @DropDownList(new SimplisityInfo(), "genxml/hidden/pagesize", "8,16,32,64,128", "8,16,32,64,128", "class='w3-input w3-border simplisity_sessionfield ' onchange=\"$('.triggersearch').trigger('click');\" title='" + @ResourceKey("DNNrocket.pagesize", remoteParam.CultureCode) + "'", "128")
+            @DropDownList(new SimplisityInfo(), "genxml/hidden/pagesize", "8,16,32,64,128", "8,16,32,64,128", "class='w3-input w3-border simplisity_sessionfield ' onchange=\"$('.triggersearch').trigger('click');\" title='" + @ResourceKey("DNNrocket.pagesize", sessionParams.CultureCode) + "'", "32")
         </div>
         <div class="w3-bar-item w3-right w3-hide-small w3-margin-left">
             @if (sessionParams.GetInt("searchcategoryid") == 0)
@@ -59,3 +49,45 @@
 
 <!-- Element to trigger simplisity call from JS event -->
 <span class="w3-hide simplisity_click triggersearch" s-sessionfield='#searchtext,#pagesize,#searchcategoryid,#orderbyref' s-cmd="rocketecommerce_productlist" s-post=".searchdata" s-return='#ecommerce-tag' s-fields='{"systemkey":"rocketecommerce","template":"ProductList.cshtml","productlist":"True"}'></span>
+
+<script>
+
+    $(document).ready(function () {
+
+        $('.clearsearch').unbind("click");
+        $('.clearsearch').click(function () {
+            $('#searchtext').val('');
+            $('.dosearch').trigger('click');
+            return false; // prevent the button click from happening
+        });
+
+        if ($('#searchtext').val() !== '') {
+            $('.dosearch').hide();
+            $('.clearsearch').show();
+        }
+
+        $('.actionentrykey').unbind('keypress');
+        $('.actionentrykey').on('keypress', function (e) {
+            if (e.keyCode == 13) {
+                $('.dosearch').trigger('click');
+                return false; // prevent the button click from happening
+            }
+        });
+
+        if ($('#searchtext').val() !== '') {
+            $('.actionentrykey').focus();
+        }
+
+        // move cursor to end of line
+        var tmpStr = $('.actionentrykey').val();
+        $('.actionentrykey').val('');
+        $('.actionentrykey').val(tmpStr);
+
+        //  change color of panel, s we show it has a selection
+        if (tmpStr != '') {
+            $('#searchtext').addClass('w3-border-red');
+        }
+
+    });
+
+</script>

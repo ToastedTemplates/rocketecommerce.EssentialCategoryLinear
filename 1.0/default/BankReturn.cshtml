@@ -9,14 +9,14 @@
 
 @{
     var paymentData = (PaymentLimpet)Model.List.First();
-    var remoteParam = (RemoteLimpet)Model.GetDataObject("remoteparam");
+    var sessionParams = (SessionParams)Model.SessionParamsData;
     var info = new SimplisityInfo(paymentData.Record);
-    info.Lang = remoteParam.CultureCode;
-    var portalShop = new PortalShopLimpet(PortalUtils.GetPortalId(), remoteParam.CultureCode);
-    var notificationLimpet = new NotificationLimpet(portalShop.PortalId, remoteParam.CultureCode);
+    info.Lang = sessionParams.CultureCode;
+    var portalShop = new PortalShopLimpet(PortalUtils.GetPortalId(), sessionParams.CultureCode);
+    var notificationLimpet = new NotificationLimpet(portalShop.PortalId, sessionParams.CultureCode);
     var systemData = new SystemLimpet("rocketecommerce");
     var adminlink = portalShop.EngineUrlWithProtocol.TrimEnd('/') + "/DesktopModules/DNNrocketModules/RocketEcommerce/admin.html";
-    var companyData = new CompanyLimpet(PortalUtils.GetPortalId(), remoteParam.CultureCode);
+    var companyData = new CompanyLimpet(PortalUtils.GetPortalId(), sessionParams.CultureCode);
     var apiurl = portalShop.EngineUrlWithProtocol.TrimEnd('/') + "/Desktopmodules/dnnrocket/api/rocket/action";
 }
 
@@ -84,18 +84,9 @@
                                 </tr>
                             </table>
 
-                            if (portalShop.CollectionOn)
-                            {
-                                <p>
-                                    @BreakOf(notificationLimpet.Message_StorePickUp)
-                                </p>
-                            }
-                            else
-                            {
-                                <p>
-                                    @BreakOf(notificationLimpet.Message_WaitingForPayment)
-                                </p>
-                            }
+                            <p>
+                                @BreakOf(notificationLimpet.Message_WaitingForPayment)
+                            </p>
                         }
                         else
                         {
@@ -166,7 +157,7 @@
                     }
                     else
                     {
-                        <a class="w3-button w3-border w3-grey" href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, remoteParam.CultureCode.ToLower())">@ResourceKey("RE.continueshopping")</a>
+                        <a class="w3-button w3-border w3-grey" href="@LocalUtils.TokenReplacementCultureCode(portalShop.ProductListPageUrl, sessionParams.CultureCode.ToLower())">@ResourceKey("RE.continueshopping")</a>
                     }
 
                 </div>
