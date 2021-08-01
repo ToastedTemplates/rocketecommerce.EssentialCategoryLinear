@@ -153,17 +153,20 @@
         </div>
 
         @{
-            var payList = portalShop.GetPaymentMethods();
+            var payList = portalShop.GetActivePaymentMethods();
         }
 
             <div class="w3-row w3-padding">
                 <div class="w3-col m6 w3-padding">
                     @foreach (var p in payList)
                     {
-                        if (p.InterfaceKey == "manualpay")
+                        if (p.PaymentProvKey() == "manualpay")
                         {
-                            <div class="w3-col m12 w3-button w3-grey simplisity_click  w3-large" s-cmd="rocketecommerce_cartpayment" s-return="document" s-post="#datasection" s-fields='{"providerkey":"@(p.InterfaceKey)","systemkey":"rocketecommerce"}'>
-                                <i class="fa fa-money-bill-wave"></i>&nbsp;@ResourceKey("RE." + p.InterfaceKey, sessionParams.CultureCode)
+                            <p>
+                                @HtmlOf(p.PayMsg())
+                            </p>
+                            <div class="w3-col m12 w3-button w3-grey simplisity_click  w3-large" s-cmd="rocketecommerce_cartpayment" s-return="document" s-post="#datasection" s-fields='{"providerkey":"@(p.PaymentProvKey())","systemkey":"rocketecommerce"}'>
+                                @HtmlOf(p.PayButtonText())
                             </div>
                             <p>
                                 @notificationLimpet.Message_ManualPaymentButton
@@ -177,11 +180,14 @@
                     }
                     @foreach (var p in payList)
                     {
-                        if (p.InterfaceKey != "manualpay")
+                        if (p.PaymentProvKey() != "manualpay")
                         {
 
-                            <div class="w3-col m12 w3-button w3-green simplisity_click w3-large" s-cmd="rocketecommerce_cartpayment" s-return="document" s-post="#datasection" s-fields='{"providerkey":"@(p.InterfaceKey)","systemkey":"rocketecommerce"}'>
-                                <i class="fa fa-university"></i>&nbsp;@ResourceKey("RE.bankpayment", sessionParams.CultureCode)
+                            <p>
+                                @HtmlOf(p.PayMsg())
+                            </p>
+                            <div class="w3-col m12 w3-button w3-margin-bottom w3-green simplisity_click w3-large" s-cmd="rocketecommerce_cartpayment" s-return="document" s-post="#datasection" s-fields='{"providerkey":"@(p.PaymentProvKey())","systemkey":"rocketecommerce"}'>
+                                @HtmlOf(p.PayButtonText())
                             </div>
                             showpayment = true;
                         }
