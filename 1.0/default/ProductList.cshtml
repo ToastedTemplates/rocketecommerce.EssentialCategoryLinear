@@ -175,7 +175,7 @@
         // If this is a remote module, it will NOT know the "browserid" and therefore we need to call the cart update from the browser.
         // When we call it on page load, we pass the browserid, through simplisityJS.  This allows us to get the cart data.
         // After the call return, we activate the simplisity panel, to make the page work correctly.
-        $('#minicartdisplay').getSimplisity('@(productDataList.PortalShop.EngineUrlWithProtocol)/Desktopmodules/dnnrocket/api/rocket/action', 'rocketecommerce_minicart', '{"systemkey":"rocketecommerce","template":"minicart.cshtml"}', "activatesimplisitypanel");
+        $('#minicartdisplay').getSimplisity('@sessionParams.ApiUrl', 'rocketecommerce_minicart', '{"systemkey":"rocketecommerce","template":"minicart.cshtml"}', "activatesimplisitypanel");
 
 
         var toastedfirstload = sessionStorage.getItem("toastedfirstload");
@@ -190,7 +190,7 @@
     });
 
     function activatesimplisitypanel() {
-       $('#ecommerce-tag').activateSimplisityPanel('@(productDataList.PortalShop.EngineUrlWithProtocol)/Desktopmodules/dnnrocket/api/rocket/action')
+       $('#ecommerce-tag').activateSimplisityPanel('@sessionParams.ApiUrl')
     }
 
 

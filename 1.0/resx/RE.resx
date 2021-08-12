@@ -445,7 +445,7 @@
     <value>Store Pickup</value>
   </data>
   <data name="message_waitingforpayment.Default" xml:space="preserve">
-    <value>You have opted to NOT pay online.  An email with instructions has been send to your email address.</value>
+    <value>You have opted to NOT pay online.  An email with instructions has been sent to your email address.</value>
   </data>
   <data name="message_waitingforpayment.Help" xml:space="preserve">
     <value>When &amp;quot;manual payment&amp;quot; is used, the payment is NOT paid online and must be sent to the merchant via other methods (cheque, money, transfer, etc.).  This message is displayed on the bank return after clicking pay on the &amp;quot;manual payment&amp;quot; option.</value>

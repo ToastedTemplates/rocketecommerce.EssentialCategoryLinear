@@ -61,7 +61,7 @@
 <script>
 
     $(document).ready(function () {
-        $(document).simplisityStartUp('@(portalShop.EngineUrlWithProtocol)/Desktopmodules/dnnrocket/api/rocket/action', { systemkey: 'rocketecommerce', debug: false });
+        $(document).simplisityStartUp('@sessionParams.ApiUrl', { systemkey: 'rocketecommerce', debug: false });
 
         @{
             // THESE VALUES ARE NEEDED FOR REMOTE RENDERING, POPULATE THEM ON FIRST LOAD (In the module OnInit(EventArgs e)),
@@ -70,6 +70,9 @@
         simplisity_setSessionField("pageurl", '@sessionParams.PageUrl');
         simplisity_setSessionField("sitekey", '@sessionParams.SiteKey');
         simplisity_setSessionField('culturecode', '@sessionParams.CultureCode');
+        simplisity_setSessionField('moduleid', '@sessionParams.ModuleId');
+        simplisity_setSessionField('tabid', '@sessionParams.TabId');
+        simplisity_setSessionField('apiurl', '@sessionParams.ApiUrl');
 
     });
 
@@ -128,7 +131,7 @@
     }
 
     function simplisitypanelecommercetag() {
-       $('#ecommerce-tag').activateSimplisityPanel('@(portalShop.EngineUrlWithProtocol)/Desktopmodules/dnnrocket/api/rocket/action')
+       $('#ecommerce-tag').activateSimplisityPanel('@sessionParams.ApiUrl')
     }
 
     function firstLoadMove() {
