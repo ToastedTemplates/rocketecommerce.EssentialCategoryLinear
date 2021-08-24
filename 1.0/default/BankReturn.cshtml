@@ -17,7 +17,7 @@
     var systemData = new SystemLimpet("rocketecommerce");
     var adminlink = portalShop.EngineUrlWithProtocol.TrimEnd('/') + "/DesktopModules/DNNrocketModules/RocketEcommerce/admin.html";
     var companyData = new CompanyLimpet(PortalUtils.GetPortalId(), sessionParams.CultureCode);
-    var apiurl = portalShop.EngineUrlWithProtocol.TrimEnd('/') + "/Desktopmodules/dnnrocket/api/rocket/action";
+    var apiurl = sessionParams.ApiUrl;
 }
 
 <div id="datasection" class="rocketecommerce_paymentform">
