@@ -11,7 +11,8 @@
     var sessionParams = (SessionParams)Model.SessionParamsData;
     var portalShop = (PortalShopLimpet)Model.GetDataObject("portalshop");
     var productDataList = (ProductLimpetList)Model.GetDataObject("productlist");
-
+    var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
+    var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
     var categoryData = new CategoryLimpet(portalShop.PortalId, sessionParams.GetInt("searchcategoryid"), sessionParams.CultureCode);
 }
 
@@ -30,6 +31,7 @@
             @if (productDataList != null)
             {
                 var orderbyDictionary = new Dictionary<string, string>();
+                orderbyDictionary.Add("","");
                 foreach (var orderbyInfo in portalShop.GetProductOrderByList())
                 {
                     orderbyDictionary.Add(orderbyInfo.GetXmlProperty("genxml/key"), ResourceKey("RE." + orderbyInfo.GetXmlProperty("genxml/key"), sessionParams.CultureCode).ToString());
@@ -51,7 +53,7 @@
 </div>
 
 <!-- Element to trigger simplisity call from JS event -->
-<span class="w3-hide simplisity_click triggersearch" s-sessionfield='#searchtext,#pagesize,#searchcategoryid,#orderbyref' s-cmd="rocketecommerce_productlist" s-post=".searchdata" s-return='#ecommerce-tag' s-fields='{"systemkey":"rocketecommerce","template":"ProductList.cshtml","productlist":"True"}'></span>
+<span class="w3-hide simplisity_click triggersearch" s-reload="true" s-sessionfield='#searchtext,#pagesize,#searchcategoryid,#orderbyref' s-cmdurl="@(sessionParams.ApiUrl)" s-cmd="rocketecommerce_productlist" s-post=".searchdata" s-return='#ecommerce-tag' s-fields='{"systemkey":"rocketecommerce","template":"ProductList.cshtml","productlist":"True","dataref":"@(remoteModule.DataRef)"}'></span>
 
 <script>
 

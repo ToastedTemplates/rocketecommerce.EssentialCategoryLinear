@@ -16,4 +16,9 @@
     <ProjectReference Include="..\..\DNNrocket\Simplisity\Simplisity.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="1.0\img\" />
+    <Folder Include="1.0\resx\" />
+  </ItemGroup>
+
 </Project>

@@ -18,12 +18,10 @@
     var portalShop = new PortalShopLimpet(categoryDataList.PortalId, categoryDataList.CultureCode);
 }
 
-@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/rocketecommerce/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/resx/")
-
 <h3 style="margin-top:30px;">@ResourceKey("RE.categories", sessionParams.CultureCode)</h3>
 
 <div class="categorytree w3-bar-block w3-light-grey w3-mobile w3-margin-top">
-    <a href="@sessionParams.PageUrl" catid="0" class="ajaxcategory w3-bar-item w3-button w3-dark-grey">
+    <a href="@sessionParams.PageUrl" catid="0" class="w3-bar-item w3-button w3-dark-grey">
         @ResourceKey("RE.allproducts")
     </a>
     @foreach (var categoryData in categoryDataList.GetCategoryTree())
@@ -43,10 +41,12 @@
         }
         var productListUrl = sessionParams.PageUrl + categoryData.UrlTokens(portalShop.ProductListPageUrl);
         <div class="@selectedcolor @toplevelclass">
-            <a href="@productListUrl" onclick="return false;" class="ajaxcategory" catid="@categoryData.CategoryId">
+            <a href="@productListUrl" class="" catid="@categoryData.CategoryId">
                 @if (categoryData.Level > 0)
                 {
-                    <i class="fas fa-chevron-right"></i>
+                    <span class="material-icons">
+                        chevron_right
+                    </span>
                 }
                 @categoryData.Name
             </a>
@@ -69,7 +69,7 @@
 
             // we need "SearchBanner.cshtml" to be loaded on the page.
             $('#searchcategoryid').val($(this).attr("catid"));
-            $('.triggersearch').trigger('click');
+            $('.triggersearch').trigger('click'); 
 
         });
 

@@ -2,6 +2,7 @@
 @using Simplisity;
 @using RocketEcommerce.Components;
 @using DNNrocketAPI.Components;
+@using RocketPortal.Components;
 
 @AddProcessData("resourcepath", "/DesktopModules/DNNrocket/api/App_LocalResources/")
 @AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketECommerce/App_LocalResources/")
@@ -11,18 +12,19 @@
     var companyData = (CompanyLimpet)Model.GetDataObject("companydata"); ;
     var cartData = (CartLimpet)Model.GetDataObject("cartdata");
     var sessionParams = (SessionParams)Model.SessionParamsData;
-
-    var appThemeFolder = productData.PortalShop.AppTheme.AppThemeFolder;
     var portalShop = productData.PortalShop;
+    var portalData = new PortalLimpet(PortalUtils.GetCurrentPortalId());
+    var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
+    var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
 
 }
 
 
-@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + portalShop.AppTheme.AppThemeFolder + "/" + portalShop.AppTheme.AppVersionFolder + "/resx/")
+@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + remoteModule.AppThemeFolder + "/" + remoteModule.AppThemeVersion + "/resx/")
 
 <!-- we need to add the search banner, so we can goto the product list from the category. -->
 <div style="display:none;">
-    @RenderTemplate("SearchBanner.cshtml", productData.PortalShop.AppTheme, Model, true)
+    @RenderTemplate("SearchBanner.cshtml", appTheme, Model, true)
 </div>
 
 <div class="productdetailflex">
@@ -38,15 +40,8 @@
                     {
                         logoRelPath = "/DesktopModules/DNNrocket/api/images/noimage2.png";
                     }
-                    var catid = sessionParams.GetInt("searchcategoryid");
-                    var productListUrl = sessionParams.PageUrl;
-                    if (catid > 0)
-                    {
-                        var categoryData = new CategoryLimpet(portalShop.PortalId, catid, sessionParams.CultureCode);
-                        productListUrl += categoryData.UrlTokens(portalShop.ProductListPageUrl);
-                    }
                 }
-                <a href="@productListUrl" class="w3-button ajaxproductlist" style="float:right;" s-cmd="rocketecommerce_productlist" s-return='#ecommerce-tag' s-fields='{"systemkey":"rocketecommerce","template":"ProductList.cshtml"}' title="@productData.Name">@ButtonText(ButtonTypes.back, sessionParams.CultureCode)</a>
+                <div onclick="window.history.back()" class="w3-button" style="float:right;" title="@productData.Name">@ButtonText(ButtonTypes.back, sessionParams.CultureCode)</div>
 
                 <h1>@productData.Name</h1>
                 <div>@(productData.Ref)</div>
@@ -55,7 +50,7 @@
                     <div class="productquickview">
 
                         <div class="quickviewimage">
-                            <img src="@ThumbnailImageWebsiteDomainUrl(productData.PortalShop.EngineUrlWithProtocol,logoRelPath,450, 450)" popupsrc="@ThumbnailImageWebsiteDomainUrl(productData.PortalShop.EngineUrlWithProtocol, logoRelPath, 800, 0)" class="imgrollovertarget" alt="@productData.Name" onclick="popupImage(this)" />
+                            <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol,logoRelPath,450, 450)" popupsrc="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, logoRelPath, 800, 0)" class="imgrollovertarget" alt="@productData.Name" onclick="popupImage(this)" />
                             @if (productData.GetImages().Count > 1)
                             {
                                 <div class="quickviewgallery">
@@ -66,7 +61,7 @@
                                     {
                                         if (imgLp <= 5)
                                         {
-                                            <img src="@ThumbnailImageWebsiteDomainUrl(productData.PortalShop.EngineUrlWithProtocol, i.RelPath, 450, 450)" popupsrc="@ThumbnailImageWebsiteDomainUrl(productData.PortalShop.EngineUrlWithProtocol, i.RelPath, 800, 0)" class="imgrollover" />
+                                            <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, i.RelPath, 450, 450)" popupsrc="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, i.RelPath, 800, 0)" class="imgrollover" />
                                         }
                                         imgLp += 1;
                                     }
@@ -116,7 +111,7 @@
                                     </div>
                                 </div>
                                 <div class="quickviewbuy">
-                                    <a href="javascript:void(0)" rel="nofollow" class="w3-button simplisity_click buybutton" s-before="beforebuy" s-after="afterbuy" s-return="#minicartdisplay" s-cmd="rocketecommerce_addtocart" s-post="#productdatasection@(productData.ProductId)" s-fields='{"productid":"@productData.ProductId"}' title="@ResourceKey("RE.addtobasket", sessionParams.CultureCode)" style="width:60px;">@MaterialIcon("shopping_cart")</a>
+                                    <a href="javascript:void(0)"  onclick="addproducttocart('@productData.ProductId','#productdatasection@(productData.ProductId)');" rel="nofollow" class="w3-button buybutton" title="@ResourceKey("RE.addtobasket", sessionParams.CultureCode)" style="width:60px;">@MaterialIcon("shopping_cart")</a>
                                 </div>
                             </div>
 
@@ -134,11 +129,11 @@
 
         <!-- Cart (Include design to stop flicker on the page) -->
         <div id="minicartdisplay" class="productlistcart">
-            @RenderTemplate("MiniCart.cshtml", productData.PortalShop.AppTheme, Model)
+            @RenderTemplate("MiniCart.cshtml", appTheme, Model)
         </div>
 
         <div class="productlistcat">
-            @RenderTemplate("CategorySideMenu.cshtml", productData.PortalShop.AppTheme, Model)
+            @RenderTemplate("CategorySideMenu.cshtml", appTheme, Model)
         </div>
 
     </div>
@@ -152,18 +147,6 @@
 <script>
 
     $(document).ready(function () {
-
-        $('.ajaxproductlist').unbind("click");
-        $('.ajaxproductlist').click(function (event) {
-            event.preventDefault();
-
-            // add to browser bar and history
-            var stateObj = { "": "" };
-            history.pushState(stateObj, "Title", $(this).attr("href"));
-
-            simplisity_callserver($(this))
-
-        });
 
         // CART EVENTS
         $('.product-subtract').unbind("click");
@@ -179,14 +162,15 @@
 
         $('.imgrollover').unbind("mouseover");
         $(".imgrollover").mouseover(function () {
-            $('.imgrollovertarget').attr('src', $(this).attr('src')) ;
+            $('.imgrollovertarget').attr('src', $(this).attr('src'));
             $('.imgrollovertarget').attr('popupsrc', $(this).attr('popupsrc'));
         });
 
-        simplisitypanelecommercetag();
-
-        firstLoadMove();
-
     });
+
+    function addproducttocart(productid, spost) {
+        $('#simplisity_loader').show();
+        $('#minicartdisplay').getSimplisity('@(sessionParams.ApiUrl)', 'rocketecommerce_addtocart', '{"template":"MiniCart.cshtml","productid":"' + productid + '","dataref":"@(remoteModule.DataRef)"}', '', spost)
+    }
 
 </script>
