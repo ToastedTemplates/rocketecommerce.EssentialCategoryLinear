@@ -53,6 +53,8 @@
                     logoRelPath = "/DesktopModules/DNNrocket/api/images/noimage2.png";
                 }
 
+                var productListUrl = sessionParams.PageUrl + productData.UrlTokens(portalShop.ProductDetailPageUrl);
+
                 <div class="product">
 
                     <div class="productimg">
@@ -60,7 +62,7 @@
                     </div>
                     <div class="productcontent">
                         <h3>
-                            <a href="@productData.UrlTokens(portalShop.ProductDetailPageUrl)" class="ajaxproduct" s-cmd="rocketecommerce_productdetail" s-return='#ecommerce-tag' s-fields='{"systemkey":"rocketecommerce","template":"ProductDetail.cshtml","productid":"@productData.ProductId","remotelanguage":"@sessionParams.CultureCode","remotecall":"True"}' productid='@productData.ProductId' title="@productData.Name">@productData.Name</a>
+                            <a href="@productListUrl" class="ajaxproduct" s-cmd="rocketecommerce_productdetail" s-return='#ecommerce-tag' s-fields='{"systemkey":"rocketecommerce","template":"ProductDetail.cshtml","productid":"@productData.ProductId","remotelanguage":"@sessionParams.CultureCode","remotecall":"True"}' productid='@productData.ProductId' title="@productData.Name">@productData.Name</a>
                         </h3>
                         <div class="summary">@BreakOf(productData.Summary)</div>
                         <div class="price">

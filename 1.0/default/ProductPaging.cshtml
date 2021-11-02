@@ -46,10 +46,10 @@
         <div class="w3-bar">
             @if (BeginPage != 1)
             {
-                <a href="@categoryData.UrlTokens(portalShop.ProductListPagingUrl, 1, pagesize)" class="w3-button w3-hover-grey">|❮</a>
+                <a href="@categoryData.UrlTokens(sessionParams.PageUrl + portalShop.ProductListPagingUrl, 1, pagesize)" class="w3-button w3-hover-grey">|❮</a>
                 if (page >= 6)
                 {
-                    <a href="@categoryData.UrlTokens(portalShop.ProductListPagingUrl,(BeginPage - 1),pagesize)" class="w3-button w3-hover-grey">..</a>
+                    <a href="@categoryData.UrlTokens(sessionParams.PageUrl + portalShop.ProductListPagingUrl,(BeginPage - 1),pagesize)" class="w3-button w3-hover-grey">..</a>
                 }
             }
 
@@ -62,7 +62,7 @@
                 }
                 if (i <= lastpage)
                 {
-                    <a href="@categoryData.UrlTokens(portalShop.ProductListPagingUrl,i,pagesize)" class='w3-button w3-hover-grey @selected'>@i</a>
+                    <a href="@categoryData.UrlTokens(sessionParams.PageUrl + portalShop.ProductListPagingUrl,i,pagesize)" class='w3-button w3-hover-grey @selected'>@i</a>
                 }
             }
 
@@ -70,9 +70,9 @@
             {
                 if (EndPage != lastpage)
                 {
-                    <a href="@categoryData.UrlTokens(portalShop.ProductListPagingUrl, (EndPage + 1), pagesize)" class="w3-button w3-hover-grey">..</a>
+                    <a href="@categoryData.UrlTokens(sessionParams.PageUrl + portalShop.ProductListPagingUrl, (EndPage + 1), pagesize)" class="w3-button w3-hover-grey">..</a>
                 }
-                <a href="@categoryData.UrlTokens(portalShop.ProductListPagingUrl, lastpage, pagesize)" class="w3-button w3-hover-grey">❯|</a>
+                <a href="@categoryData.UrlTokens(sessionParams.PageUrl + portalShop.ProductListPagingUrl, lastpage, pagesize)" class="w3-button w3-hover-grey">❯|</a>
             }
 
         </div>
