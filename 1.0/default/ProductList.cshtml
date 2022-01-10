@@ -126,9 +126,8 @@
     });
 
     function addproducttocart(productid, spost) {
-        $('#simplisity_loader').show();
-        $('#minicartdisplay').getSimplisity('@(sessionParams.ApiUrl)', 'rocketecommerce_addtocart', '{"template":"MiniCart.cshtml","productid":"' + productid + '","dataref":"@(remoteModule.DataRef)"}', '', spost)
+        $('.simplisity_loader').show();
+        $('#minicartdisplay').getSimplisity('@(sessionParams.ApiUrl)', 'remote_addtocart', '{"template":"MiniCart.cshtml","productid":"' + productid + '","moduleref":"@(remoteModule.ModuleRef)"}', '', spost)
     }
-
 
 </script>
