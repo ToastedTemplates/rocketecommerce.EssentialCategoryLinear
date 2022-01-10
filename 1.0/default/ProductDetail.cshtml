@@ -7,25 +7,17 @@
 @AddProcessData("resourcepath", "/DesktopModules/DNNrocket/api/App_LocalResources/")
 @AddProcessData("resourcepath", "/DesktopModules/DNNrocketModules/RocketECommerce/App_LocalResources/")
 
-@{
-    var productData = (ProductLimpet)Model.GetDataObject("productdata");
-    var companyData = (CompanyLimpet)Model.GetDataObject("companydata"); ;
-    var cartData = (CartLimpet)Model.GetDataObject("cartdata");
-    var sessionParams = (SessionParams)Model.SessionParamsData;
-    var portalShop = productData.PortalShop;
-    var portalData = new PortalLimpet(PortalUtils.GetCurrentPortalId());
-    var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
-    var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
-
-}
+@{ var productData = (ProductLimpet)Model.GetDataObject("productdata");
+                var companyData = (CompanyLimpet)Model.GetDataObject("companydata"); ;
+                var cartData = (CartLimpet)Model.GetDataObject("cartdata");
+                var sessionParams = (SessionParams)Model.SessionParamsData;
+                var portalShop = productData.PortalShop;
+                var portalData = new PortalLimpet(PortalUtils.GetCurrentPortalId());
+                var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
+                var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme"); }
 
 
 @AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + remoteModule.AppThemeFolder + "/" + remoteModule.AppThemeVersion + "/resx/")
-
-<!-- we need to add the search banner, so we can goto the product list from the category. -->
-<div style="display:none;">
-    @RenderTemplate("SearchBanner.cshtml", appTheme, Model, true)
-</div>
 
 <div class="productdetailflex">
 
@@ -34,13 +26,11 @@
         <div id="datasection">
 
             <div id="datalist2">
-                @{
-                    var logoRelPath = productData.LogoRelPath;
-                    if (productData.LogoRelPath == "")
-                    {
-                        logoRelPath = "/DesktopModules/DNNrocket/api/images/noimage2.png";
-                    }
-                }
+                @{ var logoRelPath = productData.LogoRelPath;
+                                if (productData.LogoRelPath == "")
+                                {
+                                    logoRelPath = "/DesktopModules/DNNrocket/api/images/noimage2.png";
+                                } }
                 <div onclick="window.history.back()" class="w3-button" style="float:right;" title="@productData.Name">@ButtonText(ButtonTypes.back, sessionParams.CultureCode)</div>
 
                 <h1>@productData.Name</h1>
@@ -53,52 +43,43 @@
                             <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol,logoRelPath,450, 450)" popupsrc="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, logoRelPath, 800, 0)" class="imgrollovertarget" alt="@productData.Name" onclick="popupImage(this)" />
                             @if (productData.GetImages().Count > 1)
                             {
-                                <div class="quickviewgallery">
-                                    @{
-                                        var imgLp = 1;
-                                    }
-                                    @foreach (var i in productData.GetImages())
-                                    {
-                                        if (imgLp <= 5)
-                                        {
-                                            <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, i.RelPath, 450, 450)" popupsrc="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, i.RelPath, 800, 0)" class="imgrollover" />
-                                        }
-                                        imgLp += 1;
-                                    }
-                                </div>
-                            }
+                <div class="quickviewgallery">
+                    @{ var imgLp = 1; }
+                    @foreach (var i in productData.GetImages())
+                    {
+                        if (imgLp <= 5)
+                        {
+    <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, i.RelPath, 450, 450)" popupsrc="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol, i.RelPath, 800, 0)" class="imgrollover" />}
+                        imgLp += 1;
+                    }
+                </div>}
                         </div>
 
                         <div class="quickviewcontent">
 
                             @if (productData.GetModelList().Count > 1)
                             {
-                                <div class="w3-hide-small "><b>@ResourceKey("RE.from", sessionParams.CultureCode)</b></div>
-                            }
+                <div class="w3-hide-small "><b>@ResourceKey("RE.from", sessionParams.CultureCode)</b></div>}
 
                             @if (productData.SalePriceMinimum > 0)
                             {
-                                <div class="quickviewprice">
-                                    <span>&nbsp;@productData.SalePriceMinimumDisplay()</span>
-                                    <span style="text-decoration:line-through;" class="w3-small">@productData.PriceMinimumDisplay()</span>
-                                </div>
-                            }
+                <div class="quickviewprice">
+                    <span>&nbsp;@productData.SalePriceMinimumDisplay()</span>
+                    <span style="text-decoration:line-through;" class="w3-small">@productData.PriceMinimumDisplay()</span>
+                </div> }
                             else
                             {
-                                <div class="quickviewprice">
-                                    @productData.PriceMinimumDisplay()
-                                </div>
-                            }
+                <div class="quickviewprice">
+                    @productData.PriceMinimumDisplay()
+                </div>}
                             <div class="quickviewsummary">@BreakOf(productData.Summary)</div>
                             <div class="quickviewmodels">
-                                @{
-                                    var displaymodels = "displaymodels";
-                                }
+                                @{ var displaymodels = "displaymodels"; }
                                 @if (productData.GetModels().Count > 1)
                                 {
                                     displaymodels = "";
                                 }
-                                <div id="modelinput@(productData.ProductId)" class="w3-border w3-white w3-margin-bottom modelinput @displaymodels">@ModelDropdown(productData)</div>
+                                <div id="modelinput@(productData.ProductId)" class="w3-white w3-margin-bottom modelinput @displaymodels">@ModelDropdown(productData)</div>
                                 <div id="optionsinput@(productData.ProductId)" class="w3-white w3-margin-bottom modelinput">@OptionsInput(productData)</div>
                             </div>
 
@@ -106,12 +87,12 @@
                                 <div class="quickviewqty">
                                     <div class="w3-bar">
                                         <div class="w3-bar-item w3-border w3-col w3-center w3-button product-subtract" productid="@(productData.ProductId)">&minus;</div>
-                                        <input class="w3-bar-item w3-col w3-input w3-border-top w3-border-bottom w3-center qtyvalue" id="qty@(productData.ProductId)" s-xpath="genxml/textbox/qty" value="1" style="width:60px;" />
+                                        <input type="number" min="0" class="w3-bar-item w3-col w3-input w3-border-top w3-border-bottom w3-center qtyvalue" id="qty@(productData.ProductId)" s-xpath="genxml/textbox/qty" value="1" style="width:60px;" />
                                         <div class="w3-bar-item w3-border w3-col w3-center w3-button product-plus" productid="@(productData.ProductId)">&plus;</div>
                                     </div>
                                 </div>
                                 <div class="quickviewbuy">
-                                    <a href="javascript:void(0)"  onclick="addproducttocart('@productData.ProductId','#productdatasection@(productData.ProductId)');" rel="nofollow" class="w3-button buybutton" title="@ResourceKey("RE.addtobasket", sessionParams.CultureCode)" style="width:60px;">@MaterialIcon("shopping_cart")</a>
+                                    <a href="javascript:void(0)" onclick="addproducttocart('@productData.ProductId','#productdatasection@(productData.ProductId)');" rel="nofollow" class="w3-button buybutton" title="@ResourceKey("RE.addtobasket", sessionParams.CultureCode)" style="width:60px;">@MaterialIcon("shopping_cart")</a>
                                 </div>
                             </div>
 
