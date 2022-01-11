@@ -16,91 +16,92 @@
     var portalData = new PortalLimpet(PortalUtils.GetCurrentPortalId());
     var remoteModule = (RemoteModule)Model.GetDataObject("remotemodule");
     var appTheme = (AppThemeLimpet)Model.GetDataObject("apptheme");
+    var appThemeDefault = (AppThemeLimpet)Model.GetDataObject("appthemedefault");
     var categoryData = new CategoryLimpet(portalShop.PortalId, productDataList.CategoryId, sessionParams.CultureCode);
 }
 
-@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + remoteModule.AppThemeFolder + "/" + remoteModule.AppThemeVersion + "/resx/")
+@AddProcessData("resourcepath", "/DesktopModules/RocketThemes/" + remoteModule.AppThemeViewFolder + "/" + remoteModule.AppThemeViewVersion + "/resx/")
 
 <div class="productlistflex">
 
     <div class="productlist">
 
-        <h1>
-            @if (!categoryData.Exists)
-            {
-                <span>@portalData.Name</span>
-            }
-            else
-            {
-                <span>@categoryData.Name</span>
-            }
-        </h1>
+		@if (!categoryData.Exists)
+		{
+			<h1>@companyData.CompanyName</h1>
+		}
+		else
+		{
+			<h1>@categoryData.Name</h1>
+		}
+        
+        @RenderTemplate("SearchBanner.cshtml", appThemeDefault, Model, true)
 
-        @RenderTemplate("SearchBanner.cshtml", appTheme, Model, true)
+        <div id="datasection">
 
-    <div id="datasection">
-
-        <div id="datalist2" class="productgrid">
-            @{
-                var lp1 = 0;
-            }
-            @foreach (ProductLimpet productData in productDataList.GetArticleList())
-            {
-                lp1 += 1;
-                var logoRelPath = productData.LogoRelPath;
-                if (productData.LogoRelPath == "")
-                {
-                    logoRelPath = "/DesktopModules/DNNrocket/api/images/noimage2.png";
+            <div id="datalist2" class="producttable">
+                @{
+                    var lp1 = 0;
                 }
+                @foreach (ProductLimpet productData in productDataList.GetArticleList())
+                {
+                    lp1 += 1;
+                    var logoRelPath = productData.LogoRelPath;
+                    if (productData.LogoRelPath == "")
+                    {
+                        logoRelPath = "/DesktopModules/DNNrocket/api/images/noimage2.png";
+                    }
+                    var productListUrl = sessionParams.PageUrl + productData.UrlTokens(portalShop.ProductDetailPageUrl);
 
-                var productListUrl = sessionParams.PageUrl + productData.UrlTokens(portalShop.ProductDetailPageUrl);
+                    <div class="product">
 
-                <div class="product">
-
-                    <div class="productimg">
-                        <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol,logoRelPath,400,400)" alt="@productData.Name" />
-                    </div>
-                    <div class="productcontent">
-                        <h3>
-                            <a href="@productListUrl" class="ajaxproduct" s-cmd="rocketecommerce_productdetail" s-return='#ecommerce-tag' s-fields='{"systemkey":"rocketecommerce","template":"ProductDetail.cshtml","productid":"@productData.ProductId","remotelanguage":"@sessionParams.CultureCode","remotecall":"True"}' productid='@productData.ProductId' title="@productData.Name">@productData.Name</a>
-                        </h3>
-                        <div class="summary">@BreakOf(productData.Summary)</div>
-                        <div class="price">
-                            @if (productData.SalePriceMinimum > 0)
-                            {
-                                <div>
-                                    <div class="productprice" style="text-decoration:line-through;">@productData.PriceMinimumDisplay()</div>
-                                </div>
-                                <div class="w3-red">
-                                    <div class="w3-large">@productData.SalePriceMinimumDisplay()</div>
-                                </div>
-                            }
-                            else
-                            {
-                                <div>
+                        <div class="productimg">
+                            <img src="@ThumbnailImageWebsiteDomainUrl(portalData.EngineUrlWithProtocol,logoRelPath,120,120)" alt="@productData.Name" />
+                        </div>
+                        <div class="productcontent">
+                            <h3>
+                                <a href="@productListUrl#ecommerce-tag" class="ajaxproduct" s-cmd="remote_productdetail" s-return='#ecommerce-tag' s-fields='{"systemkey":"rocketecommerce","template":"ProductDetail.cshtml","productid":"@productData.ProductId","remotelanguage":"@sessionParams.CultureCode","remotecall":"True","dataref":"@(remoteModule.DataRef)"}' productid='@productData.ProductId' title="@productData.Name">
+                                    @productData.Name
+                                </a>
+                            </h3>
+                            <div class="w3-row">
+                                @if (productData.SalePriceMinimum > 0)
+                                {
+                                    <div class="w3-half">
+                                        <div class="productprice" style="text-decoration:line-through;">@productData.PriceMinimumDisplay()</div>
+                                    </div>
+                                    <div class="w3-half w3-red">
+                                        <div class="w3-large">@productData.SalePriceMinimumDisplay()</div>
+                                    </div>
+                                }
+                                else
+                                {
                                     <div class="productprice">@productData.PriceMinimumDisplay()</div>
-                                </div>
-                            }
+                                }
+                            </div>
+							<div class="productactions">
+								@{
+									var modellistcount = productData.GetModelList().Count;
+									var optionlistcount = productData.GetOptionList().Count;
+								}
+								@if (modellistcount == 1 && optionlistcount == 0)
+								{
+									<a href="javascript:void(0);" onclick="addproducttocart('@productData.ProductId');" rel="nofollow" class="w3-button buybutton">@ResourceKey("RE.addtobasket", sessionParams.CultureCode)</a>
+								}
+								else
+								{
+									<a href="@productListUrl#ecommerce-tag" title="@productData.Name" class="w3-button buybutton">@ResourceKey("RE.details", sessionParams.CultureCode)</a>
+								}
+							</div>
                         </div>
-                        <div class="actions">
-                            @{
-                                var modellistcount = productData.GetModelList().Count;
-                                var optionlistcount = productData.GetOptionList().Count;
-                            }
-                            @if (modellistcount == 1 && optionlistcount == 0)
-                            {
-                                <a href="javascript:void(0);"  onclick="addproducttocart('@productData.ProductId');" rel="nofollow" class="w3-button buybutton">@ResourceKey("RE.addtobasket", sessionParams.CultureCode)</a>
-                            }
-                        </div>
+
                     </div>
+                }
+            </div>
 
-                </div>
-            }
+            @RenderTemplate("ProductPaging.cshtml", appThemeDefault, Model, true)
+
         </div>
-
-        @RenderTemplate("ProductPaging.cshtml", appTheme, Model, true)
-
-    </div>
 
     </div>
 
@@ -129,5 +130,6 @@
         $('.simplisity_loader').show();
         $('#minicartdisplay').getSimplisity('@(sessionParams.ApiUrl)', 'remote_addtocart', '{"template":"MiniCart.cshtml","productid":"' + productid + '","moduleref":"@(remoteModule.ModuleRef)"}', '', spost)
     }
+
 
 </script>
